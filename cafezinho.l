@@ -5,7 +5,7 @@
 #include "cafezinho.tab.h"
 #include "types.h"
 
-int lineNum = 0;
+int lineNum = 1;
 char msg[1024];
 extern void yyerror(const char *s);
 int tipoErro = 1; // tipoErro = 0 é lexico - tipoErro = 1 é sintatico
@@ -117,7 +117,9 @@ CADEIADECARACTERES   \"(\\.|[^\\"])*\"
 
 {CADEIADECARACTERES} {printf("Cadeia caractere: %s\n", yytext);return (CADEIACARACTERES);} 
 
-{ESPACO_VAZIO}  {lineNum++;} //CONTAGEM DE LINHAS
+{ESPACO_VAZIO} //CONTAGEM DE LINHAS
+
+[\n]       {lineNum++;}
 
 {CHAR}({CHAR}|{DIGIT})*(\r|\n|\r\n){CHAR}({CHAR}|{DIGIT})* {
     strcpy(msg,"ERRO: Palavra não termina");

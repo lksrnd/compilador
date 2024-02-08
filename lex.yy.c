@@ -371,8 +371,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 50
-#define YY_END_OF_BUFFER 51
+#define YY_NUM_RULES 51
+#define YY_END_OF_BUFFER 52
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -382,15 +382,15 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[120] =
     {   0,
-        0,    0,    2,    2,   51,   49,   47,   50,   20,   49,
+        0,    0,    2,    2,   52,   50,   47,   48,   20,   50,
        24,    8,    9,   23,   27,   17,   26,   25,   44,   22,
        28,   15,   10,   16,   21,   43,    6,    7,   43,   43,
        41,   43,   43,   43,   43,   43,   43,   43,   18,   19,
-        2,    4,   50,   11,    0,   46,    0,    1,   44,   45,
+        2,    4,   51,   11,    0,   46,    0,    1,   44,   45,
        13,   12,   14,    0,    0,   43,   43,   43,   43,   43,
        43,   43,   43,   43,   42,   43,   43,   36,    2,    3,
-        3,    5,   48,   30,   43,   43,   43,   43,   31,   43,
-       43,   43,   43,   43,   48,   43,   43,   43,   43,   33,
+        3,    5,   49,   30,   43,   43,   43,   43,   31,   43,
+       43,   43,   43,   43,   49,   43,   43,   43,   43,   33,
        43,   43,   43,   43,   43,   37,   43,   43,   43,   43,
 
        43,   38,   43,   43,   43,   43,   43,   43,   43,   34,
@@ -561,11 +561,11 @@ static const flex_int16_t yy_chk[361] =
     } ;
 
 /* Table of booleans, true if rule could match eol. */
-static const flex_int32_t yy_rule_can_match_eol[51] =
+static const flex_int32_t yy_rule_can_match_eol[52] =
     {   0,
 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0,     };
+    0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0,     };
 
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
@@ -589,7 +589,7 @@ char *yytext;
 #include "cafezinho.tab.h"
 #include "types.h"
 
-int lineNum = 0;
+int lineNum = 1;
 char msg[1024];
 extern void yyerror(const char *s);
 int tipoErro = 1; // tipoErro = 0 é lexico - tipoErro = 1 é sintatico
@@ -1127,32 +1127,38 @@ YY_RULE_SETUP
 case 47:
 YY_RULE_SETUP
 #line 120 "cafezinho.l"
-{lineNum++;} //CONTAGEM DE LINHAS
+//CONTAGEM DE LINHAS
 	YY_BREAK
 case 48:
 /* rule 48 can match eol */
 YY_RULE_SETUP
 #line 122 "cafezinho.l"
+{lineNum++;}
+	YY_BREAK
+case 49:
+/* rule 49 can match eol */
+YY_RULE_SETUP
+#line 124 "cafezinho.l"
 {
     strcpy(msg,"ERRO: Palavra não termina");
     tipoErro = 0;
     yyerror(msg);
 }
 	YY_BREAK
-case 49:
+case 50:
 YY_RULE_SETUP
-#line 128 "cafezinho.l"
+#line 130 "cafezinho.l"
 {strcpy(msg,"ERRO: CARACTERE INVÁLIDO");
 		tipoErro = 0;
 		yyerror(msg);
     }
 	YY_BREAK
-case 50:
+case 51:
 YY_RULE_SETUP
-#line 135 "cafezinho.l"
+#line 137 "cafezinho.l"
 ECHO;
 	YY_BREAK
-#line 1156 "lex.yy.c"
+#line 1162 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2169,7 +2175,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 135 "cafezinho.l"
+#line 137 "cafezinho.l"
 
 
 int yywrap() {

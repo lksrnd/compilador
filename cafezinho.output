@@ -1,4 +1,4 @@
-Estado 157 conflitos: 1 de deslocamento/redução
+Estado 156 conflitos: 1 de deslocamento/redução
 
 
 Gramática
@@ -46,7 +46,7 @@ Gramática
    28        | RETORNE Expr PONTOVIRGULA
    29        | LEIA LValueExpr PONTOVIRGULA
    30        | ESCREVA Expr PONTOVIRGULA
-   31        | ESCREVA CADEIACARACTERES DOISPONTOS
+   31        | ESCREVA CADEIACARACTERES PONTOVIRGULA
    32        | NOVALINHA PONTOVIRGULA
    33        | SE ABREPARENTESES Expr FECHAPARENTESES ENTAO Comando
    34        | SE ABREPARENTESES Expr FECHAPARENTESES ENTAO Comando SENAO Comando
@@ -101,7 +101,7 @@ Gramática
    71         | CONSTINT
    72         | ABREPARENTESES Expr FECHAPARENTESES
 
-   73 ListExpr: ID AssignExpr
+   73 ListExpr: AssignExpr
    74         | ListExpr VIRGULA AssignExpr
 
 
@@ -125,13 +125,13 @@ Terminais, com as regras onde eles aparecem
     FECHACHAVE (271) 17 18
     EXCLAMACAO (272) 62
     INTERROGACAO (273) 41
-    DOISPONTOS (274) 31 41
+    DOISPONTOS (274) 41
     VEZES (275) 57
     RESTO (276) 59
     DIVIDIDO (277) 58
     MENOS (278) 55 61
     MAIS (279) 54
-    PONTOVIRGULA (280) 2 3 20 21 26 27 28 29 30 32
+    PONTOVIRGULA (280) 2 3 20 21 26 27 28 29 30 31 32
     PROGRAMA (281) 6
     CAR (282) 23
     INT (283) 22
@@ -149,7 +149,7 @@ Terminais, com as regras onde eles aparecem
     CONSTINT (295) 3 8 21 71
     CONSTCAR (296) 70
     CADEIACARACTERES (297) 31
-    ID (298) 2 3 4 7 8 13 14 15 16 20 21 64 65 66 67 68 69 73
+    ID (298) 2 3 4 7 8 13 14 15 16 20 21 64 65 66 67 68 69
 
 
 Não terminais com as regras onde eles aparecem
@@ -605,7 +605,7 @@ Estado 32
 Estado 33
 
    30 Comando: ESCREVA . Expr PONTOVIRGULA
-   31        | ESCREVA . CADEIACARACTERES DOISPONTOS
+   31        | ESCREVA . CADEIACARACTERES PONTOVIRGULA
 
     ABREPARENTESES    deslocar, e ir ao estado 26
     EXCLAMACAO        deslocar, e ir ao estado 28
@@ -979,9 +979,9 @@ Estado 68
 
 Estado 69
 
-   31 Comando: ESCREVA CADEIACARACTERES . DOISPONTOS
+   31 Comando: ESCREVA CADEIACARACTERES . PONTOVIRGULA
 
-    DOISPONTOS  deslocar, e ir ao estado 106
+    PONTOVIRGULA  deslocar, e ir ao estado 106
 
 
 Estado 70
@@ -1080,10 +1080,26 @@ Estado 75
    66 PrimExpr: ID ABREPARENTESES . ListExpr FECHAPARENTESES
    67         | ID ABREPARENTESES . FECHAPARENTESES
 
+    ABREPARENTESES   deslocar, e ir ao estado 26
     FECHAPARENTESES  deslocar, e ir ao estado 111
-    ID               deslocar, e ir ao estado 112
+    EXCLAMACAO       deslocar, e ir ao estado 28
+    MENOS            deslocar, e ir ao estado 29
+    CONSTINT         deslocar, e ir ao estado 37
+    CONSTCAR         deslocar, e ir ao estado 38
+    ID               deslocar, e ir ao estado 39
 
-    ListExpr  ir ao estado 113
+    AssignExpr  ir ao estado 112
+    CondExpr    ir ao estado 45
+    OrExpr      ir ao estado 46
+    AndExpr     ir ao estado 47
+    EqExpr      ir ao estado 48
+    DesigExpr   ir ao estado 49
+    AddExpr     ir ao estado 50
+    MulExpr     ir ao estado 51
+    UnExpr      ir ao estado 52
+    LValueExpr  ir ao estado 53
+    PrimExpr    ir ao estado 54
+    ListExpr    ir ao estado 113
 
 
 Estado 76
@@ -1503,7 +1519,7 @@ Estado 105
 
 Estado 106
 
-   31 Comando: ESCREVA CADEIACARACTERES DOISPONTOS .
+   31 Comando: ESCREVA CADEIACARACTERES PONTOVIRGULA .
 
     $padrão  reduzir usando a regra 31 (Comando)
 
@@ -1547,26 +1563,9 @@ Estado 111
 
 Estado 112
 
-   73 ListExpr: ID . AssignExpr
+   73 ListExpr: AssignExpr .
 
-    ABREPARENTESES  deslocar, e ir ao estado 26
-    EXCLAMACAO      deslocar, e ir ao estado 28
-    MENOS           deslocar, e ir ao estado 29
-    CONSTINT        deslocar, e ir ao estado 37
-    CONSTCAR        deslocar, e ir ao estado 38
-    ID              deslocar, e ir ao estado 39
-
-    AssignExpr  ir ao estado 140
-    CondExpr    ir ao estado 45
-    OrExpr      ir ao estado 46
-    AndExpr     ir ao estado 47
-    EqExpr      ir ao estado 48
-    DesigExpr   ir ao estado 49
-    AddExpr     ir ao estado 50
-    MulExpr     ir ao estado 51
-    UnExpr      ir ao estado 52
-    LValueExpr  ir ao estado 53
-    PrimExpr    ir ao estado 54
+    $padrão  reduzir usando a regra 73 (ListExpr)
 
 
 Estado 113
@@ -1574,15 +1573,15 @@ Estado 113
    66 PrimExpr: ID ABREPARENTESES ListExpr . FECHAPARENTESES
    74 ListExpr: ListExpr . VIRGULA AssignExpr
 
-    FECHAPARENTESES  deslocar, e ir ao estado 141
-    VIRGULA          deslocar, e ir ao estado 142
+    FECHAPARENTESES  deslocar, e ir ao estado 140
+    VIRGULA          deslocar, e ir ao estado 141
 
 
 Estado 114
 
    41 CondExpr: OrExpr INTERROGACAO Expr . DOISPONTOS CondExpr
 
-    DOISPONTOS  deslocar, e ir ao estado 143
+    DOISPONTOS  deslocar, e ir ao estado 142
 
 
 Estado 115
@@ -1747,7 +1746,7 @@ Estado 129
 
    21 ListaDeclVar: Tipo ID ABRECOLCHETES CONSTINT . FECHACOLCHETES DeclVar PONTOVIRGULA ListaDeclVar
 
-    FECHACOLCHETES  deslocar, e ir ao estado 144
+    FECHACOLCHETES  deslocar, e ir ao estado 143
 
 
 Estado 130
@@ -1759,7 +1758,7 @@ Estado 130
 
     $padrão  reduzir usando a regra 19 (ListaDeclVar)
 
-    ListaDeclVar  ir ao estado 145
+    ListaDeclVar  ir ao estado 144
     Tipo          ir ao estado 18
 
 
@@ -1772,7 +1771,7 @@ Estado 131
 
     $padrão  reduzir usando a regra 5 (DeclFuncVar)
 
-    DeclFuncVar  ir ao estado 146
+    DeclFuncVar  ir ao estado 145
     Tipo         ir ao estado 5
 
 
@@ -1781,7 +1780,7 @@ Estado 132
    14 ListaParametrosCont: Tipo ID ABRECOLCHETES FECHACOLCHETES .
    16                    | Tipo ID ABRECOLCHETES FECHACOLCHETES . VIRGULA ListaParametrosCont
 
-    VIRGULA  deslocar, e ir ao estado 147
+    VIRGULA  deslocar, e ir ao estado 146
 
     $padrão  reduzir usando a regra 14 (ListaParametrosCont)
 
@@ -1801,21 +1800,21 @@ Estado 134
 
     $padrão  reduzir usando a regra 9 (DeclVar)
 
-    DeclVar  ir ao estado 148
+    DeclVar  ir ao estado 147
 
 
 Estado 135
 
    68 PrimExpr: ID ABRECOLCHETES Expr . FECHACOLCHETES
 
-    FECHACOLCHETES  deslocar, e ir ao estado 149
+    FECHACOLCHETES  deslocar, e ir ao estado 148
 
 
 Estado 136
 
    64 LValueExpr: ID ABRECOLCHETES Expr . FECHACOLCHETES
 
-    FECHACOLCHETES  deslocar, e ir ao estado 150
+    FECHACOLCHETES  deslocar, e ir ao estado 149
 
 
 Estado 137
@@ -1823,14 +1822,14 @@ Estado 137
    33 Comando: SE ABREPARENTESES Expr FECHAPARENTESES . ENTAO Comando
    34        | SE ABREPARENTESES Expr FECHAPARENTESES . ENTAO Comando SENAO Comando
 
-    ENTAO  deslocar, e ir ao estado 151
+    ENTAO  deslocar, e ir ao estado 150
 
 
 Estado 138
 
    35 Comando: ENQUANTO ABREPARENTESES Expr FECHAPARENTESES . EXECUTE Comando
 
-    EXECUTE  deslocar, e ir ao estado 152
+    EXECUTE  deslocar, e ir ao estado 151
 
 
 Estado 139
@@ -1844,19 +1843,12 @@ Estado 139
 
 Estado 140
 
-   73 ListExpr: ID AssignExpr .
-
-    $padrão  reduzir usando a regra 73 (ListExpr)
-
-
-Estado 141
-
    66 PrimExpr: ID ABREPARENTESES ListExpr FECHAPARENTESES .
 
     $padrão  reduzir usando a regra 66 (PrimExpr)
 
 
-Estado 142
+Estado 141
 
    74 ListExpr: ListExpr VIRGULA . AssignExpr
 
@@ -1867,7 +1859,7 @@ Estado 142
     CONSTCAR        deslocar, e ir ao estado 38
     ID              deslocar, e ir ao estado 39
 
-    AssignExpr  ir ao estado 153
+    AssignExpr  ir ao estado 152
     CondExpr    ir ao estado 45
     OrExpr      ir ao estado 46
     AndExpr     ir ao estado 47
@@ -1880,7 +1872,7 @@ Estado 142
     PrimExpr    ir ao estado 54
 
 
-Estado 143
+Estado 142
 
    41 CondExpr: OrExpr INTERROGACAO Expr DOISPONTOS . CondExpr
 
@@ -1891,7 +1883,7 @@ Estado 143
     CONSTCAR        deslocar, e ir ao estado 38
     ID              deslocar, e ir ao estado 63
 
-    CondExpr   ir ao estado 154
+    CondExpr   ir ao estado 153
     OrExpr     ir ao estado 46
     AndExpr    ir ao estado 47
     EqExpr     ir ao estado 48
@@ -1902,7 +1894,7 @@ Estado 143
     PrimExpr   ir ao estado 54
 
 
-Estado 144
+Estado 143
 
    21 ListaDeclVar: Tipo ID ABRECOLCHETES CONSTINT FECHACOLCHETES . DeclVar PONTOVIRGULA ListaDeclVar
 
@@ -1910,59 +1902,94 @@ Estado 144
 
     $padrão  reduzir usando a regra 9 (DeclVar)
 
-    DeclVar  ir ao estado 155
+    DeclVar  ir ao estado 154
 
 
-Estado 145
+Estado 144
 
    20 ListaDeclVar: Tipo ID DeclVar PONTOVIRGULA ListaDeclVar .
 
     $padrão  reduzir usando a regra 20 (ListaDeclVar)
 
 
-Estado 146
+Estado 145
 
     3 DeclFuncVar: Tipo ID ABRECOLCHETES CONSTINT FECHACOLCHETES DeclVar PONTOVIRGULA DeclFuncVar .
 
     $padrão  reduzir usando a regra 3 (DeclFuncVar)
 
 
-Estado 147
+Estado 146
 
    16 ListaParametrosCont: Tipo ID ABRECOLCHETES FECHACOLCHETES VIRGULA . ListaParametrosCont
 
     CAR  deslocar, e ir ao estado 1
     INT  deslocar, e ir ao estado 2
 
-    ListaParametrosCont  ir ao estado 156
+    ListaParametrosCont  ir ao estado 155
     Tipo                 ir ao estado 22
 
 
-Estado 148
+Estado 147
 
     8 DeclVar: VIRGULA ID ABRECOLCHETES CONSTINT FECHACOLCHETES DeclVar .
 
     $padrão  reduzir usando a regra 8 (DeclVar)
 
 
-Estado 149
+Estado 148
 
    68 PrimExpr: ID ABRECOLCHETES Expr FECHACOLCHETES .
 
     $padrão  reduzir usando a regra 68 (PrimExpr)
 
 
-Estado 150
+Estado 149
 
    64 LValueExpr: ID ABRECOLCHETES Expr FECHACOLCHETES .
 
     $padrão  reduzir usando a regra 64 (LValueExpr)
 
 
-Estado 151
+Estado 150
 
    33 Comando: SE ABREPARENTESES Expr FECHAPARENTESES ENTAO . Comando
    34        | SE ABREPARENTESES Expr FECHAPARENTESES ENTAO . Comando SENAO Comando
+
+    ABREPARENTESES  deslocar, e ir ao estado 26
+    ABRECHAVE       deslocar, e ir ao estado 10
+    EXCLAMACAO      deslocar, e ir ao estado 28
+    MENOS           deslocar, e ir ao estado 29
+    PONTOVIRGULA    deslocar, e ir ao estado 30
+    RETORNE         deslocar, e ir ao estado 31
+    LEIA            deslocar, e ir ao estado 32
+    ESCREVA         deslocar, e ir ao estado 33
+    NOVALINHA       deslocar, e ir ao estado 34
+    SE              deslocar, e ir ao estado 35
+    ENQUANTO        deslocar, e ir ao estado 36
+    CONSTINT        deslocar, e ir ao estado 37
+    CONSTCAR        deslocar, e ir ao estado 38
+    ID              deslocar, e ir ao estado 39
+
+    Bloco       ir ao estado 40
+    Comando     ir ao estado 156
+    Expr        ir ao estado 43
+    AssignExpr  ir ao estado 44
+    CondExpr    ir ao estado 45
+    OrExpr      ir ao estado 46
+    AndExpr     ir ao estado 47
+    EqExpr      ir ao estado 48
+    DesigExpr   ir ao estado 49
+    AddExpr     ir ao estado 50
+    MulExpr     ir ao estado 51
+    UnExpr      ir ao estado 52
+    LValueExpr  ir ao estado 53
+    PrimExpr    ir ao estado 54
+
+
+Estado 151
+
+   35 Comando: ENQUANTO ABREPARENTESES Expr FECHAPARENTESES EXECUTE . Comando
 
     ABREPARENTESES  deslocar, e ir ao estado 26
     ABRECHAVE       deslocar, e ir ao estado 10
@@ -1997,86 +2024,51 @@ Estado 151
 
 Estado 152
 
-   35 Comando: ENQUANTO ABREPARENTESES Expr FECHAPARENTESES EXECUTE . Comando
-
-    ABREPARENTESES  deslocar, e ir ao estado 26
-    ABRECHAVE       deslocar, e ir ao estado 10
-    EXCLAMACAO      deslocar, e ir ao estado 28
-    MENOS           deslocar, e ir ao estado 29
-    PONTOVIRGULA    deslocar, e ir ao estado 30
-    RETORNE         deslocar, e ir ao estado 31
-    LEIA            deslocar, e ir ao estado 32
-    ESCREVA         deslocar, e ir ao estado 33
-    NOVALINHA       deslocar, e ir ao estado 34
-    SE              deslocar, e ir ao estado 35
-    ENQUANTO        deslocar, e ir ao estado 36
-    CONSTINT        deslocar, e ir ao estado 37
-    CONSTCAR        deslocar, e ir ao estado 38
-    ID              deslocar, e ir ao estado 39
-
-    Bloco       ir ao estado 40
-    Comando     ir ao estado 158
-    Expr        ir ao estado 43
-    AssignExpr  ir ao estado 44
-    CondExpr    ir ao estado 45
-    OrExpr      ir ao estado 46
-    AndExpr     ir ao estado 47
-    EqExpr      ir ao estado 48
-    DesigExpr   ir ao estado 49
-    AddExpr     ir ao estado 50
-    MulExpr     ir ao estado 51
-    UnExpr      ir ao estado 52
-    LValueExpr  ir ao estado 53
-    PrimExpr    ir ao estado 54
-
-
-Estado 153
-
    74 ListExpr: ListExpr VIRGULA AssignExpr .
 
     $padrão  reduzir usando a regra 74 (ListExpr)
 
 
-Estado 154
+Estado 153
 
    41 CondExpr: OrExpr INTERROGACAO Expr DOISPONTOS CondExpr .
 
     $padrão  reduzir usando a regra 41 (CondExpr)
 
 
-Estado 155
+Estado 154
 
    21 ListaDeclVar: Tipo ID ABRECOLCHETES CONSTINT FECHACOLCHETES DeclVar . PONTOVIRGULA ListaDeclVar
 
-    PONTOVIRGULA  deslocar, e ir ao estado 159
+    PONTOVIRGULA  deslocar, e ir ao estado 158
 
 
-Estado 156
+Estado 155
 
    16 ListaParametrosCont: Tipo ID ABRECOLCHETES FECHACOLCHETES VIRGULA ListaParametrosCont .
 
     $padrão  reduzir usando a regra 16 (ListaParametrosCont)
 
 
-Estado 157
+Estado 156
 
    33 Comando: SE ABREPARENTESES Expr FECHAPARENTESES ENTAO Comando .
    34        | SE ABREPARENTESES Expr FECHAPARENTESES ENTAO Comando . SENAO Comando
 
-    SENAO  deslocar, e ir ao estado 160
+    SENAO  deslocar, e ir ao estado 159
 
     SENAO     [reduzir usando a regra 33 (Comando)]
     $padrão  reduzir usando a regra 33 (Comando)
 
 
-Estado 158
+Estado 157
 
    35 Comando: ENQUANTO ABREPARENTESES Expr FECHAPARENTESES EXECUTE Comando .
 
     $padrão  reduzir usando a regra 35 (Comando)
 
 
-Estado 159
+Estado 158
 
    21 ListaDeclVar: Tipo ID ABRECOLCHETES CONSTINT FECHACOLCHETES DeclVar PONTOVIRGULA . ListaDeclVar
 
@@ -2085,11 +2077,11 @@ Estado 159
 
     $padrão  reduzir usando a regra 19 (ListaDeclVar)
 
-    ListaDeclVar  ir ao estado 161
+    ListaDeclVar  ir ao estado 160
     Tipo          ir ao estado 18
 
 
-Estado 160
+Estado 159
 
    34 Comando: SE ABREPARENTESES Expr FECHAPARENTESES ENTAO Comando SENAO . Comando
 
@@ -2109,7 +2101,7 @@ Estado 160
     ID              deslocar, e ir ao estado 39
 
     Bloco       ir ao estado 40
-    Comando     ir ao estado 162
+    Comando     ir ao estado 161
     Expr        ir ao estado 43
     AssignExpr  ir ao estado 44
     CondExpr    ir ao estado 45
@@ -2124,14 +2116,14 @@ Estado 160
     PrimExpr    ir ao estado 54
 
 
-Estado 161
+Estado 160
 
    21 ListaDeclVar: Tipo ID ABRECOLCHETES CONSTINT FECHACOLCHETES DeclVar PONTOVIRGULA ListaDeclVar .
 
     $padrão  reduzir usando a regra 21 (ListaDeclVar)
 
 
-Estado 162
+Estado 161
 
    34 Comando: SE ABREPARENTESES Expr FECHAPARENTESES ENTAO Comando SENAO Comando .
 

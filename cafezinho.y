@@ -25,8 +25,6 @@ extern int tipoErro;
 %token ID
 %verbose
 
-//%type <varType> Tipo
-
 %%
 
 Programa
@@ -87,14 +85,12 @@ ListaComando
     | Comando ListaComando  
     ;
 
-Comando
-    :
-    PONTOVIRGULA
+Comando : PONTOVIRGULA
     | Expr PONTOVIRGULA
     | RETORNE Expr PONTOVIRGULA
     | LEIA LValueExpr PONTOVIRGULA
     | ESCREVA Expr PONTOVIRGULA
-    | ESCREVA CADEIACARACTERES DOISPONTOS
+    | ESCREVA CADEIACARACTERES PONTOVIRGULA
     | NOVALINHA PONTOVIRGULA
     | SE ABREPARENTESES Expr FECHAPARENTESES ENTAO Comando
     | SE ABREPARENTESES Expr FECHAPARENTESES ENTAO Comando SENAO Comando
@@ -174,7 +170,7 @@ PrimExpr
     ;
 
 ListExpr
-    : ID AssignExpr
+    : AssignExpr
     | ListExpr VIRGULA AssignExpr
     ;
 

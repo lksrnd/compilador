@@ -15,12 +15,12 @@ int tipoErro = 1; // tipoErro = 0 é lexico - tipoErro = 1 é sintatico
 CHAR    [A-Za-z] 
 DIGIT   [0-9]  
 ID      [a-zA-Z_][a-zA-Z0-9_]*
-ESPACO_VAZIO [ \t\r]
 INTCONST [0-9]+
 CARCONST [A-Za-z_0-9]+
-CADEIADECARACTERES   \"(\\.|[^\\"])*\"
+CADEIADECARACTERES \"([^\"\n\\]|\\.)*\"
 %x COMENTARIO
-%option yylineno
+
+
 
 %%
 
@@ -105,7 +105,7 @@ CADEIADECARACTERES   \"(\\.|[^\\"])*\"
 
 "execute"   {printf("Palavra reservada: %s\n", yytext); return (EXECUTE);  }
 
-"e"         {printf("Palavra reservada: %s\n", yytext); return (ABRECOLCHETES);  }
+"e"         {printf("Palavra reservada: %s\n", yytext); return (E);  }
 
 "ou"        {printf("Palavra reservada: %s\n", yytext); return (OU);  }
 
@@ -115,9 +115,9 @@ CADEIADECARACTERES   \"(\\.|[^\\"])*\"
 
 {CARCONST} {printf("Constante Caractere: %s\n", yytext);return (CONSTCAR); } 
 
-{CADEIADECARACTERES} {printf("Cadeia caractere: %s\n", yytext);return (CADEIACARACTERES);} 
+{CADEIADECARACTERES} {printf("Cadeia de caracteres: %s\n", yytext);return (CADEIACARACTERES);}
 
-{ESPACO_VAZIO} //CONTAGEM DE LINHAS
+[ \t\r]+  {}
 
 [\n]       {lineNum++;}
 

@@ -4,57 +4,38 @@
 #include <stdlib.h>
 
 void yyerror(const char *s);
-int yylex(void);
+extern char * yytext;
+extern int yylex();
+extern FILE* yyin;
 extern int lineNum;
+extern int tipoErro;
 %}
 
 %union{
     int intValue;
     char charValue;
-    //VarType varType;
+    char* cadeiaValue;
 }
 %start Programa
 
-%token OU 
-%token CADEIADECARACTERES
-%token E
-%token <intValue> INTCONST
-%token <charValue> CARCONST
-%token ABRECOLCHETES FECHACOLCHETES ABREPARENTESES FECHAPARENTESES IGUAL DIFERENTE RECEBE MENORIGUAL MAIORIGUAL 
-%token MENOR MAIOR VIRGULA ABRECHAVE FECHACHAVE EXCLAMACAO INTERROGACAO DOISPONTOS  RESTO  PONTOVIRGULA
-%token MAIS
-%token MENOS
-%token VEZES
-%token DIVIDIDO
-%token PROGRAMA
+%token ABRECOLCHETES FECHACOLCHETES ABREPARENTESES FECHAPARENTESES IGUAL DIFERENTE RECEBE
+%token MENORIGUAL MAIORIGUAL MENOR MAIOR VIRGULA ABRECHAVE FECHACHAVE EXCLAMACAO INTERROGACAO
+%token DOISPONTOS VEZES RESTO DIVIDIDO MENOS MAIS PONTOVIRGULA PROGRAMA CAR INT RETORNE LEIA
+%token ESCREVA NOVALINHA SE ENTAO SENAO ENQUANTO EXECUTE E OU CONSTINT CONSTCAR CADEIACARACTERES
 %token ID
-%token RETORNE
-%token LEIA
-%token ESCREVA
-%token NOVALINHA
-%token SE
-%token ENTAO
-%token SENAO
-%token ENQUANTO
-%token EXECUTE
-%token <charValue> CAR
-%token <intValue> INT 
-
-
+%verbose
 
 //%type <varType> Tipo
 
-
-
 %%
 
-Programa 
+Programa
     : DeclFuncVar DeclProg
     ;
 
 DeclFuncVar
     : Tipo ID DeclVar PONTOVIRGULA DeclFuncVar
-    | Tipo ID ABRECOLCHETES INTCONST FECHACOLCHETES DeclVar PONTOVIRGULA DeclFuncVar
+    | Tipo ID ABRECOLCHETES CONSTINT FECHACOLCHETES DeclVar PONTOVIRGULA DeclFuncVar
     | Tipo ID DeclFunc DeclFuncVar
     |
     ;
@@ -65,7 +46,7 @@ DeclProg
 
 DeclVar
     : VIRGULA ID DeclVar
-    | VIRGULA ID ABRECOLCHETES INTCONST FECHACOLCHETES DeclVar
+    | VIRGULA ID ABRECOLCHETES CONSTINT FECHACOLCHETES DeclVar
     |
     ;
 
@@ -93,7 +74,7 @@ Bloco
 ListaDeclVar
     :
     | Tipo ID DeclVar PONTOVIRGULA ListaDeclVar
-    | Tipo ID ABRECOLCHETES INTCONST FECHACOLCHETES DeclVar PONTOVIRGULA ListaDeclVar
+    | Tipo ID ABRECOLCHETES CONSTINT FECHACOLCHETES DeclVar PONTOVIRGULA ListaDeclVar
     ;
 
 Tipo
@@ -113,7 +94,7 @@ Comando
     | RETORNE Expr PONTOVIRGULA
     | LEIA LValueExpr PONTOVIRGULA
     | ESCREVA Expr PONTOVIRGULA
-    | ESCREVA CADEIADECARACTERES DOISPONTOS
+    | ESCREVA CADEIACARACTERES DOISPONTOS
     | NOVALINHA PONTOVIRGULA
     | SE ABREPARENTESES Expr FECHAPARENTESES ENTAO Comando
     | SE ABREPARENTESES Expr FECHAPARENTESES ENTAO Comando SENAO Comando
@@ -187,8 +168,8 @@ PrimExpr
     | ID ABREPARENTESES FECHAPARENTESES
     | ID ABRECOLCHETES Expr FECHACOLCHETES
     | ID
-    | CARCONST
-    | INTCONST
+    | CONSTCAR
+    | CONSTINT
     | ABREPARENTESES Expr FECHAPARENTESES
     ;
 
@@ -197,18 +178,31 @@ ListExpr
     | ListExpr VIRGULA AssignExpr
     ;
 
-/* Defina as regras restantes para Comando, Expr, AssignExpr, etc., de forma semelhante */
-
 %%
 
-void yyerror(const char *s) {
-    fprintf(stderr, "ERRO: %s\n", s);
+void yyerror(char const * s) {
+        if(tipoErro==0)
+    {
+        printf("%s NA LINHA %d - token: %s\n", s, lineNum, yytext);
+    }
+    else
+    {
+        printf("Erro sintatico proximo a %s ", yytext);
+        printf(" - linha: %d \n", lineNum);
+        tipoErro=1;
+    }
+    exit(1);
+
 }
 
-int main(void) {
+int main(int argc, char** argv){
+   if(argc!=2)
+        yyerror("Uso correto: ./cafezinho nome_arq_entrada.txt");
+   yyin=fopen(argv[1], "r");
+   if(!yyin)
+        yyerror("arquivo não pode ser aberto\n");
     if (yyparse() == 0) {
         printf("Análise sintática concluída com sucesso.\n");
     }
-    return 0;
-}
 
+}

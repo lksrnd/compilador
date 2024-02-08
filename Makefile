@@ -11,33 +11,37 @@
 
 # clean: rm *.o
 
-# Definir o compilador C
-CC=gcc
+CC = gcc
+CFLAGS = -g -Wall
+LFLAGS = -lfl
 
-# Definir as flags de compilação
-CFLAGS=-Wall -g -lfl
+# Nome do executável
+EXECUTABLE = cafezinho
 
-# Nome do programa final
-PROGRAM=cafezinho
+# Arquivos gerados pelo Bison
+BISON_SOURCE = cafezinho.y
+BISON_C = cafezinho.tab.c
+BISON_H = cafezinho.tab.h
+
+# Arquivos gerados pelo Flex
+FLEX_SOURCE = cafezinho.l
+FLEX_C = lex.yy.c
 
 # Alvo padrão para compilar tudo
-all: $(PROGRAM)
+all: $(EXECUTABLE)
 
-# Dependências do Bison - Gera o analisador sintático
-cafezinho.tab.c cafezinho.tab.h: bison.y
-	bison -d bison.y -o cafezinho.tab.c
+# Gerar executável
+$(EXECUTABLE): $(BISON_C) $(FLEX_C)
+	$(CC) $(CFLAGS) $(BISON_C) $(FLEX_C) -o $@ $(LFLAGS)
 
-# Dependências do Flex - Gera o analisador léxico
-lex.yy.c: flex.l cafezinho.tab.h
-	flex flex.l
+# Gerar arquivos do Bison
+$(BISON_C): $(BISON_SOURCE)
+	bison -d $(BISON_SOURCE) -o $(BISON_C)
 
-# Compila o programa final
-$(PROGRAM): lex.yy.c cafezinho.tab.c cafezinho.tab.h
-	$(CC) $(CFLAGS) lex.yy.c cafezinho.tab.c -o $(PROGRAM)
+# Gerar arquivos do Flex
+$(FLEX_C): $(FLEX_SOURCE) $(BISON_H)
+	flex -o $(FLEX_C) $(FLEX_SOURCE)
 
 # Limpar arquivos gerados
 clean:
-	rm -f lex.yy.c cafezinho.tab.c cafezinho.tab.h $(PROGRAM)
-
-# Alvo falso para evitar conflitos com arquivos de mesmo nome
-.PHONY: all clean
+	rm -f $(BISON_C) $(BISON_H) $(FLEX_C) *.o $(EXECUTABLE)

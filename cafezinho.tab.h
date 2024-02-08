@@ -49,47 +49,47 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    OU = 258,
-    CADEIADECARACTERES = 259,
-    E = 260,
-    INTCONST = 261,
-    CARCONST = 262,
-    ABRECOLCHETES = 263,
-    FECHACOLCHETES = 264,
-    ABREPARENTESES = 265,
-    FECHAPARENTESES = 266,
-    IGUAL = 267,
-    DIFERENTE = 268,
-    RECEBE = 269,
-    MENORIGUAL = 270,
-    MAIORIGUAL = 271,
-    MENOR = 272,
-    MAIOR = 273,
-    VIRGULA = 274,
-    ABRECHAVE = 275,
-    FECHACHAVE = 276,
-    EXCLAMACAO = 277,
-    INTERROGACAO = 278,
-    DOISPONTOS = 279,
-    RESTO = 280,
-    PONTOVIRGULA = 281,
-    MAIS = 282,
-    MENOS = 283,
-    VEZES = 284,
-    DIVIDIDO = 285,
-    PROGRAMA = 286,
-    ID = 287,
-    RETORNE = 288,
-    LEIA = 289,
-    ESCREVA = 290,
-    NOVALINHA = 291,
-    SE = 292,
-    ENTAO = 293,
-    SENAO = 294,
-    ENQUANTO = 295,
-    EXECUTE = 296,
-    CAR = 297,
-    INT = 298
+    ABRECOLCHETES = 258,
+    FECHACOLCHETES = 259,
+    ABREPARENTESES = 260,
+    FECHAPARENTESES = 261,
+    IGUAL = 262,
+    DIFERENTE = 263,
+    RECEBE = 264,
+    MENORIGUAL = 265,
+    MAIORIGUAL = 266,
+    MENOR = 267,
+    MAIOR = 268,
+    VIRGULA = 269,
+    ABRECHAVE = 270,
+    FECHACHAVE = 271,
+    EXCLAMACAO = 272,
+    INTERROGACAO = 273,
+    DOISPONTOS = 274,
+    VEZES = 275,
+    RESTO = 276,
+    DIVIDIDO = 277,
+    MENOS = 278,
+    MAIS = 279,
+    PONTOVIRGULA = 280,
+    PROGRAMA = 281,
+    CAR = 282,
+    INT = 283,
+    RETORNE = 284,
+    LEIA = 285,
+    ESCREVA = 286,
+    NOVALINHA = 287,
+    SE = 288,
+    ENTAO = 289,
+    SENAO = 290,
+    ENQUANTO = 291,
+    EXECUTE = 292,
+    E = 293,
+    OU = 294,
+    CONSTINT = 295,
+    CONSTCAR = 296,
+    CADEIACARACTERES = 297,
+    ID = 298
   };
 #endif
 
@@ -97,11 +97,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 11 "bison.y"
+#line 14 "cafezinho.y"
 
     int intValue;
     char charValue;
-    //VarType varType;
+    char* cadeiaValue;
 
 #line 107 "cafezinho.tab.h"
 

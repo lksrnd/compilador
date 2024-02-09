@@ -11,21 +11,17 @@
 
 # clean: rm *.o
 
+# Definições de variáveis
 CC = gcc
-CFLAGS = -g -Wall
+CFLAGS = -Wall -Wextra -g
 LFLAGS = -lfl
 
-# Nome do executável
-EXECUTABLE = cafezinho
-
-# Arquivos gerados pelo Bison
+FLEX_SOURCE = cafezinho.l
 BISON_SOURCE = cafezinho.y
 BISON_C = cafezinho.tab.c
 BISON_H = cafezinho.tab.h
-
-# Arquivos gerados pelo Flex
-FLEX_SOURCE = cafezinho.l
 FLEX_C = lex.yy.c
+EXECUTABLE = cafezinho
 
 # Alvo padrão para compilar tudo
 all: $(EXECUTABLE)
@@ -44,4 +40,5 @@ $(FLEX_C): $(FLEX_SOURCE) $(BISON_H)
 
 # Limpar arquivos gerados
 clean:
-	rm -f $(BISON_C) $(BISON_H) $(FLEX_C) *.o $(EXECUTABLE)
+	rm -f $(BISON_C) $(BISON_H) $(FLEX_C) $(EXECUTABLE)
+

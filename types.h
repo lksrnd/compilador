@@ -3,76 +3,64 @@
 
 #include <stdlib.h>
 
-typedef enum {
-    VAR_EMPTY,
-    VAR_INTEGER,
-    VAR_ERROR,
-    VAR_CHAR,
-    VAR_STRING
-} VarType;
+typedef enum{
+   Programa,
+   DeclFunc,
+   DeclFuncVar,
+   DeclFuncVar1,
+   DeclFuncVar2,
+   DeclFuncVar3,
+   Se, 
+   And,
+   Ou,
+   Enquanto, 
+   Do, 
+   Num, 
+   Escreva,
+   lstStmt,
+   Atribuir,
+   Identificador,
+   Bloco,
+   ListaComando,
+   IdentificadorCEC,
+   IdentificadorL,
+   Negacao,
+   Oposto,
+   Divisao,
+   Resto,
+   Mais,
+   Menos, 
+   Mult, 
+   Menor,
+   Maior, 
+   Igual, 
+   MenorIgual,
+   MaiorIgual,
+   IgualIgual,
+   Diferente,
+   SeTernario,
+   SeSenao,
+   NovaLinha,
+   EscrevaC,
+   Leia,
+   Retorne,
+   Tipo,
+   VetorDeclVar,
+   ListaDeclVar,
+   ListaParametrosCont2,
+   ListaParametrosCont3,
+   Virgula,
+   ConstCar,
+   ConstInt
+   }TypeOperators;
 
-typedef enum {
-    ASSIGN,
-    IDENTIFIER,
-    STATEMENT,
-    ID_ARRAY,
-    IF,
-    ELSE,
-    WHILE,
-    UNARY,
-    BINARY,
-    TERNARY,
-    BLOCK,
-    DECLARATION,
-    FUNC_DECLARATION,
-    FUNC_CALL,
-    VARIABLE,
-    ARRAY_VARIABLE,
-    LIST_VARIABLE,
-    INTEGER,
-    CHAR,
-    STRING,
-    NEW_LINE,
-    READ,
-    WRITE,
-    START,
-    EMPTY,
-    RETURN,
-    EXPRESSION,
-    EXPRESSION_LIST
-} NodeType;
-
-typedef enum {
-    SUM,
-    SUB,
-    MULTIPLY,
-    DIVIDE,
-    EQUAL,
-    DIFFERENT,
-    MINOR,
-    MORE,
-    NEGATIVE,
-    REST,
-    NEGATE,
-    AND,
-    OR,
-    CONDITIONAL,
-    LESS_EQUAL,
-    GREATER_EQUAL
-} Operator;
-
-typedef struct Element Element;
-
-struct Element {
-    Element* next;
-    int lineNum, intValue, level;
-    char charValue;
-    char name[256]; 
-    Operator operatorType;
-    NodeType nodeType;
-    VarType varType;
-    Element* id; 
-    
-};
+typedef struct operador{
+    TypeOperators typeOperator;
+    int  line;
+    char* Tlexema;
+    struct operador* t1;
+    struct operador* t2;
+    struct operador* t3;
+} TOperador;
 
 #endif

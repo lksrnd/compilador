@@ -68,18 +68,28 @@
 /* First part of user prologue.  */
 #line 1 "cafezinho.y"
 
-#include "types.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "types.h"
 
-void yyerror(const char *s);
 extern char * yytext;
 extern int yylex();
 extern FILE* yyin;
 extern int lineNum;
 extern int tipoErro;
+void yyerror(const char *s);
 
-#line 83 "cafezinho.tab.c"
+TOperador* CriaNo(TypeOperators typeOperator,  int line, TOperador* t1, TOperador* t2, char* Tlexema);
+TOperador* CriaNoTernario(TypeOperators typeOperator,  int line, TOperador* t1, TOperador* t2,TOperador* t3, char* Tlexema);
+void walkTree(TOperador* raiz);
+void printOperator(TOperador* no, char* nomeOperador);
+
+TOperador* raiz;
+char nomeOperador[200];
+
+
+#line 93 "cafezinho.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -164,10 +174,10 @@ extern int yydebug;
     EXECUTE = 292,
     E = 293,
     OU = 294,
-    CONSTINT = 295,
+    ID = 295,
     CONSTCAR = 296,
-    CADEIACARACTERES = 297,
-    ID = 298
+    CONSTINT = 297,
+    CADEIACARACTERES = 298
   };
 #endif
 
@@ -175,13 +185,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 14 "cafezinho.y"
+#line 24 "cafezinho.y"
 
-    int intValue;
-    char charValue;
-    char* cadeiaValue;
+    int line;
+    char* Tlexema;
+    TOperador* Tpont;
 
-#line 185 "cafezinho.tab.c"
+#line 195 "cafezinho.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -500,7 +510,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  6
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   188
+#define YYLAST   191
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  44
@@ -560,14 +570,14 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    31,    31,    35,    36,    37,    38,    42,    46,    47,
-      48,    52,    56,    57,    61,    62,    63,    64,    68,    69,
-      73,    74,    75,    79,    80,    84,    85,    88,    89,    90,
-      91,    92,    93,    94,    95,    96,    97,    98,   102,   106,
-     107,   111,   112,   116,   117,   121,   122,   126,   127,   128,
-     132,   133,   134,   135,   136,   139,   140,   141,   145,   146,
-     147,   148,   152,   153,   154,   158,   159,   163,   164,   165,
-     166,   167,   168,   169,   173,   174
+       0,    43,    43,    47,    48,    49,    50,    54,    58,    59,
+      60,    64,    68,    69,    73,    74,    75,    76,    80,    81,
+      85,    86,    87,    91,    92,    96,    97,   101,   102,   103,
+     104,   105,   106,   107,   108,   109,   110,   111,   115,   119,
+     120,   124,   125,   129,   130,   134,   135,   139,   140,   141,
+     145,   146,   147,   148,   149,   152,   153,   154,   158,   159,
+     160,   161,   165,   166,   167,   171,   172,   176,   177,   178,
+     179,   180,   181,   182,   186,   187
 };
 #endif
 
@@ -582,13 +592,12 @@ static const char *const yytname[] =
   "FECHACHAVE", "EXCLAMACAO", "INTERROGACAO", "DOISPONTOS", "VEZES",
   "RESTO", "DIVIDIDO", "MENOS", "MAIS", "PONTOVIRGULA", "PROGRAMA", "CAR",
   "INT", "RETORNE", "LEIA", "ESCREVA", "NOVALINHA", "SE", "ENTAO", "SENAO",
-  "ENQUANTO", "EXECUTE", "E", "OU", "CONSTINT", "CONSTCAR",
-  "CADEIACARACTERES", "ID", "$accept", "Programa", "DeclFuncVar",
-  "DeclProg", "DeclVar", "DeclFunc", "ListaParametros",
-  "ListaParametrosCont", "Bloco", "ListaDeclVar", "Tipo", "ListaComando",
-  "Comando", "Expr", "AssignExpr", "CondExpr", "OrExpr", "AndExpr",
-  "EqExpr", "DesigExpr", "AddExpr", "MulExpr", "UnExpr", "LValueExpr",
-  "PrimExpr", "ListExpr", YY_NULLPTR
+  "ENQUANTO", "EXECUTE", "E", "OU", "ID", "CONSTCAR", "CONSTINT",
+  "CADEIACARACTERES", "$accept", "Programa", "DeclFuncVar", "DeclProg",
+  "DeclVar", "DeclFunc", "ListaParametros", "ListaParametrosCont", "Bloco",
+  "ListaDeclVar", "Tipo", "ListaComando", "Comando", "Expr", "AssignExpr",
+  "CondExpr", "OrExpr", "AndExpr", "EqExpr", "DesigExpr", "AddExpr",
+  "MulExpr", "UnExpr", "LValueExpr", "PrimExpr", "ListExpr", YY_NULLPTR
 };
 #endif
 
@@ -605,7 +614,7 @@ static const yytype_int16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF (-110)
+#define YYPACT_NINF (-111)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -619,23 +628,23 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-      41,  -110,  -110,     8,    -8,   -11,  -110,    46,  -110,    12,
-      41,  -110,   -17,    41,    -5,    58,    41,    62,    30,    82,
-      84,  -110,    45,    13,    41,  -110,     7,  -110,    31,    31,
-    -110,     7,    80,     2,    76,   108,   120,  -110,  -110,    34,
-    -110,   118,    99,   101,  -110,  -110,    -4,   100,    67,   133,
-      57,    89,  -110,   130,  -110,    17,   127,    46,    48,   107,
-    -110,  -110,   143,    55,  -110,  -110,   136,   149,   137,   138,
-     139,  -110,     7,     7,     7,    23,  -110,  -110,  -110,     7,
-     110,   110,   110,   110,   110,   110,   110,   110,   110,   110,
-     110,   110,   110,     7,   125,   141,   142,  -110,   164,    41,
-     165,  -110,     7,  -110,     7,  -110,  -110,  -110,   166,   167,
-     170,  -110,  -110,    51,   151,   100,    67,   133,   133,    57,
-      57,    57,    57,    89,    89,  -110,  -110,  -110,  -110,   171,
-      41,    41,   157,  -110,   127,   172,   173,   144,   145,   174,
-    -110,     7,   110,   127,  -110,  -110,    41,  -110,  -110,  -110,
-      99,    99,  -110,  -110,   154,  -110,   148,  -110,    41,    99,
-    -110,  -110
+      41,  -111,  -111,     8,    -3,   -28,  -111,    16,  -111,    13,
+      41,  -111,    24,    41,    36,    32,    41,    62,    59,   107,
+      99,  -111,    75,    21,    41,  -111,    23,  -111,    31,    31,
+    -111,    23,    79,     2,    98,   120,   122,    83,  -111,  -111,
+    -111,   113,   101,   115,  -111,  -111,    -1,    97,    72,   139,
+      73,    40,  -111,   137,  -111,    27,   143,    16,    44,   116,
+    -111,  -111,   153,    34,  -111,  -111,   135,   158,   138,   140,
+     141,  -111,    23,    23,    23,     9,  -111,  -111,  -111,    23,
+     105,   105,   105,   105,   105,   105,   105,   105,   105,   105,
+     105,   105,   105,    23,   125,   144,   145,  -111,   160,    41,
+     164,  -111,    23,  -111,    23,  -111,  -111,  -111,   156,   165,
+     168,  -111,  -111,    15,   154,    97,    72,   139,   139,    73,
+      73,    73,    73,    40,    40,  -111,  -111,  -111,  -111,   170,
+      41,    41,   161,  -111,   143,   172,   173,   146,   142,   171,
+    -111,    23,   105,   143,  -111,  -111,    41,  -111,  -111,  -111,
+     101,   101,  -111,  -111,   157,  -111,   148,  -111,    41,   101,
+    -111,  -111
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -646,7 +655,7 @@ static const yytype_int8 yydefact[] =
        6,    24,    23,     0,     0,     0,     1,     0,     2,    10,
       20,     7,     0,    12,     0,     0,     6,     0,     0,     0,
        0,    13,     0,    10,     6,     5,     0,    19,     0,     0,
-      27,     0,     0,     0,     0,     0,     0,    72,    71,    70,
+      27,     0,     0,     0,     0,     0,     0,    70,    71,    72,
       37,     0,    25,     0,    38,    39,    41,    44,    46,    49,
       54,    57,    61,     0,    64,    10,    10,     0,    14,     0,
        8,     3,     0,    70,    63,    62,     0,    66,     0,     0,
@@ -665,9 +674,9 @@ static const yytype_int8 yydefact[] =
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
-    -110,  -110,   -14,  -110,   -22,  -110,  -110,   -90,    -2,  -109,
-     -10,   146,   -51,   -20,   -71,    38,  -110,   104,   105,    14,
-      70,    18,    68,   153,    90,  -110
+    -111,  -111,   -14,  -111,   -22,  -111,  -111,   -90,    -2,  -110,
+     -10,   147,   -76,   -20,   -71,    39,  -111,   104,   106,    18,
+      69,    25,    17,   159,   110,  -111
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
@@ -684,66 +693,68 @@ static const yytype_int8 yydefgoto[] =
 static const yytype_int16 yytable[] =
 {
       18,    60,    25,    22,   112,    11,    62,    26,     6,   133,
-      61,    66,    26,    70,    79,    12,    59,    13,     7,    28,
-      94,   144,   128,    19,    28,    29,    14,    14,    26,   111,
-      29,    14,     9,    95,    96,    80,    26,    74,    23,    75,
-      28,   -66,    37,    38,    69,    39,    29,    37,    38,   160,
-      39,    98,   108,   109,   110,    97,   155,   140,   102,   114,
-      75,    10,    99,    37,    38,   141,    39,    26,     1,     2,
-     152,    37,    38,    55,    63,    82,    83,    10,    27,    28,
-      88,    89,   135,    24,   136,    29,    56,    30,    58,    22,
-      57,    31,    32,    33,    34,    35,   117,   118,    36,   156,
-     157,    71,    37,    38,    26,    39,   123,   124,   161,    90,
-      91,    92,   147,    72,    10,    26,    28,   145,    64,    65,
-      18,   154,    29,    67,    30,    73,    78,    28,    31,    32,
-      33,    34,    35,    29,    76,    36,    22,    93,    81,    37,
-      38,    14,    39,    84,    85,    86,    87,   100,    18,   101,
-      37,    38,   104,    63,   119,   120,   121,   122,   125,   126,
-     127,   103,   105,   106,   107,   129,   130,   131,   132,   134,
-     142,   146,   137,   138,   139,   143,   148,   149,   150,   158,
-     153,   -65,   151,   159,   115,    68,   116,     0,    77
+      61,    66,     9,    70,    26,   111,    12,    79,    13,    28,
+     144,   140,   128,     7,    59,    29,    28,    14,    26,   141,
+      94,    10,    29,    95,    96,    14,    26,   102,    80,    75,
+      28,    14,    37,    38,    39,    69,    29,    98,   160,    37,
+      38,    39,   108,   109,   110,    97,   155,    24,    99,   114,
+      90,    91,    92,    37,    38,    39,    19,    26,     1,     2,
+     152,    63,    38,    39,   156,   157,    23,    10,    27,    28,
+      82,    83,   135,   161,   136,    29,    74,    30,    75,    22,
+     -66,    31,    32,    33,    34,    35,    88,    89,    36,    55,
+     117,   118,    37,    38,    39,    57,    26,   125,   126,   127,
+      26,    56,   147,   123,   124,    58,    10,   145,    28,    67,
+      18,   154,    28,    71,    29,    72,    30,    73,    29,    76,
+      31,    32,    33,    34,    35,    81,    22,    36,    64,    65,
+      78,    37,    38,    39,    93,    63,    38,    39,    18,    84,
+      85,    86,    87,   119,   120,   121,   122,    14,   100,   101,
+     103,   104,   137,   105,   132,   106,   107,   129,   134,   130,
+     131,   138,   139,   142,   143,   146,   148,   149,   -65,   151,
+     150,   153,   158,   159,   115,     0,     0,   116,     0,    77,
+       0,    68
 };
 
 static const yytype_int16 yycheck[] =
 {
       10,    23,    16,    13,    75,     7,    26,     5,     0,    99,
-      24,    31,     5,    33,    18,     3,     3,     5,    26,    17,
-       3,   130,    93,    40,    17,    23,    14,    14,     5,     6,
-      23,    14,    43,    55,    56,    39,     5,     3,    43,     5,
-      17,     7,    40,    41,    42,    43,    23,    40,    41,   158,
-      43,     3,    72,    73,    74,    57,   146,     6,     3,    79,
-       5,    15,    14,    40,    41,    14,    43,     5,    27,    28,
-     141,    40,    41,    43,    43,     8,     9,    15,    16,    17,
-      23,    24,   102,    25,   104,    23,     4,    25,    43,    99,
-       6,    29,    30,    31,    32,    33,    82,    83,    36,   150,
-     151,    25,    40,    41,     5,    43,    88,    89,   159,    20,
-      21,    22,   134,     5,    15,     5,    17,   131,    28,    29,
-     130,   143,    23,    43,    25,     5,    25,    17,    29,    30,
-      31,    32,    33,    23,    16,    36,   146,     7,    38,    40,
-      41,    14,    43,    10,    11,    12,    13,    40,   158,     6,
-      40,    41,     3,    43,    84,    85,    86,    87,    90,    91,
-      92,    25,    25,    25,    25,    40,    25,    25,     4,     4,
-      19,    14,     6,     6,     4,     4,     4,     4,    34,    25,
-     142,     7,    37,    35,    80,    32,    81,    -1,    42
+      24,    31,    40,    33,     5,     6,     3,    18,     5,    17,
+     130,     6,    93,    26,     3,    23,    17,    14,     5,    14,
+       3,    15,    23,    55,    56,    14,     5,     3,    39,     5,
+      17,    14,    40,    41,    42,    43,    23,     3,   158,    40,
+      41,    42,    72,    73,    74,    57,   146,    25,    14,    79,
+      20,    21,    22,    40,    41,    42,    42,     5,    27,    28,
+     141,    40,    41,    42,   150,   151,    40,    15,    16,    17,
+       8,     9,   102,   159,   104,    23,     3,    25,     5,    99,
+       7,    29,    30,    31,    32,    33,    23,    24,    36,    40,
+      82,    83,    40,    41,    42,     6,     5,    90,    91,    92,
+       5,     4,   134,    88,    89,    40,    15,   131,    17,    40,
+     130,   143,    17,    25,    23,     5,    25,     5,    23,    16,
+      29,    30,    31,    32,    33,    38,   146,    36,    28,    29,
+      25,    40,    41,    42,     7,    40,    41,    42,   158,    10,
+      11,    12,    13,    84,    85,    86,    87,    14,    42,     6,
+      25,     3,     6,    25,     4,    25,    25,    42,     4,    25,
+      25,     6,     4,    19,     4,    14,     4,     4,     7,    37,
+      34,   142,    25,    35,    80,    -1,    -1,    81,    -1,    42,
+      -1,    32
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,    27,    28,    45,    46,    54,     0,    26,    47,    43,
-      15,    52,     3,     5,    14,    48,    49,    53,    54,    40,
-      50,    51,    54,    43,    25,    46,     5,    16,    17,    23,
-      25,    29,    30,    31,    32,    33,    36,    40,    41,    43,
+       0,    27,    28,    45,    46,    54,     0,    26,    47,    40,
+      15,    52,     3,     5,    14,    48,    49,    53,    54,    42,
+      50,    51,    54,    40,    25,    46,     5,    16,    17,    23,
+      25,    29,    30,    31,    32,    33,    36,    40,    41,    42,
       52,    55,    56,    57,    58,    59,    60,    61,    62,    63,
-      64,    65,    66,    67,    68,    43,     4,     6,    43,     3,
-      48,    46,    57,    43,    68,    68,    57,    43,    67,    42,
+      64,    65,    66,    67,    68,    40,     4,     6,    40,     3,
+      48,    46,    57,    40,    68,    68,    57,    40,    67,    43,
       57,    25,     5,     5,     3,     5,    16,    55,    25,    18,
       39,    38,     8,     9,    10,    11,    12,    13,    23,    24,
       20,    21,    22,     7,     3,    48,    48,    52,     3,    14,
-      40,     6,     3,    25,     3,    25,    25,    25,    57,    57,
+      42,     6,     3,    25,     3,    25,    25,    25,    57,    57,
       57,     6,    58,    69,    57,    61,    62,    63,    63,    64,
-      64,    64,    64,    65,    65,    66,    66,    66,    58,    40,
+      64,    64,    64,    65,    65,    66,    66,    66,    58,    42,
       25,    25,     4,    51,     4,    57,    57,     6,     6,     4,
        6,    14,    19,     4,    53,    46,    14,    48,     4,     4,
       34,    37,    58,    59,    48,    51,    56,    56,    25,    35,
@@ -1468,8 +1479,452 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
+  case 2:
+#line 43 "cafezinho.y"
+                           { raiz = CriaNo(Programa, lineNum, (yyvsp[-1].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1486 "cafezinho.tab.c"
+    break;
 
-#line 1473 "cafezinho.tab.c"
+  case 3:
+#line 47 "cafezinho.y"
+                                               { (yyval.Tpont) = CriaNoTernario(DeclFuncVar1, lineNum, (yyvsp[-4].Tpont), (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1492 "cafezinho.tab.c"
+    break;
+
+  case 4:
+#line 48 "cafezinho.y"
+                                                                                     { (yyval.Tpont) = CriaNoTernario(DeclFuncVar1, lineNum, (yyvsp[-7].Tpont), (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1498 "cafezinho.tab.c"
+    break;
+
+  case 5:
+#line 49 "cafezinho.y"
+                                   { (yyval.Tpont) = CriaNoTernario(DeclFuncVar2, lineNum, (yyvsp[-3].Tpont), (yyvsp[-1].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1504 "cafezinho.tab.c"
+    break;
+
+  case 6:
+#line 50 "cafezinho.y"
+        {(yyval.Tpont)=NULL;}
+#line 1510 "cafezinho.tab.c"
+    break;
+
+  case 7:
+#line 54 "cafezinho.y"
+                     { (yyval.Tpont) = (yyvsp[0].Tpont); }
+#line 1516 "cafezinho.tab.c"
+    break;
+
+  case 8:
+#line 58 "cafezinho.y"
+                            { (yyval.Tpont) = (yyvsp[0].Tpont); }
+#line 1522 "cafezinho.tab.c"
+    break;
+
+  case 9:
+#line 59 "cafezinho.y"
+                                                                { (yyval.Tpont) = (yyvsp[0].Tpont); }
+#line 1528 "cafezinho.tab.c"
+    break;
+
+  case 10:
+#line 60 "cafezinho.y"
+        { (yyval.Tpont)=NULL; }
+#line 1534 "cafezinho.tab.c"
+    break;
+
+  case 11:
+#line 64 "cafezinho.y"
+                                                            { (yyval.Tpont) = CriaNo(DeclFunc , lineNum, (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1540 "cafezinho.tab.c"
+    break;
+
+  case 12:
+#line 68 "cafezinho.y"
+      { (yyval.Tpont)=NULL; }
+#line 1546 "cafezinho.tab.c"
+    break;
+
+  case 13:
+#line 69 "cafezinho.y"
+                          { (yyval.Tpont)=(yyvsp[0].Tpont); }
+#line 1552 "cafezinho.tab.c"
+    break;
+
+  case 14:
+#line 73 "cafezinho.y"
+              { (yyval.Tpont)=(yyvsp[-1].Tpont); }
+#line 1558 "cafezinho.tab.c"
+    break;
+
+  case 15:
+#line 74 "cafezinho.y"
+                                           { (yyval.Tpont)=(yyvsp[-3].Tpont); }
+#line 1564 "cafezinho.tab.c"
+    break;
+
+  case 16:
+#line 75 "cafezinho.y"
+                                          { (yyval.Tpont) = CriaNo(ListaParametrosCont2, lineNum, (yyvsp[-3].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1570 "cafezinho.tab.c"
+    break;
+
+  case 17:
+#line 76 "cafezinho.y"
+                                                                       { (yyval.Tpont) = CriaNo(ListaParametrosCont3, lineNum, (yyvsp[-5].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1576 "cafezinho.tab.c"
+    break;
+
+  case 18:
+#line 80 "cafezinho.y"
+                                                     { (yyval.Tpont) = CriaNo(Bloco, lineNum, (yyvsp[-2].Tpont), (yyvsp[-1].Tpont), NULL); }
+#line 1582 "cafezinho.tab.c"
+    break;
+
+  case 19:
+#line 81 "cafezinho.y"
+                                        { (yyval.Tpont)=(yyvsp[-1].Tpont); }
+#line 1588 "cafezinho.tab.c"
+    break;
+
+  case 20:
+#line 85 "cafezinho.y"
+        { (yyval.Tpont)=NULL; }
+#line 1594 "cafezinho.tab.c"
+    break;
+
+  case 21:
+#line 86 "cafezinho.y"
+                                                { (yyval.Tpont) = CriaNoTernario(ListaDeclVar, lineNum, (yyvsp[-4].Tpont), (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1600 "cafezinho.tab.c"
+    break;
+
+  case 22:
+#line 87 "cafezinho.y"
+                                                                                      { (yyval.Tpont) = CriaNoTernario(VetorDeclVar, lineNum, (yyvsp[-7].Tpont), (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1606 "cafezinho.tab.c"
+    break;
+
+  case 23:
+#line 91 "cafezinho.y"
+          { (yyval.Tpont) = CriaNo(Tipo, lineNum, NULL, NULL, "int"); }
+#line 1612 "cafezinho.tab.c"
+    break;
+
+  case 24:
+#line 92 "cafezinho.y"
+          { (yyval.Tpont) = CriaNo(Tipo, lineNum, NULL, NULL, "car"); }
+#line 1618 "cafezinho.tab.c"
+    break;
+
+  case 25:
+#line 96 "cafezinho.y"
+              { (yyval.Tpont) = (yyvsp[0].Tpont); }
+#line 1624 "cafezinho.tab.c"
+    break;
+
+  case 26:
+#line 97 "cafezinho.y"
+                           { (yyval.Tpont) = CriaNo(ListaComando, lineNum, (yyvsp[-1].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1630 "cafezinho.tab.c"
+    break;
+
+  case 27:
+#line 101 "cafezinho.y"
+                   { (yyval.Tpont)=NULL; }
+#line 1636 "cafezinho.tab.c"
+    break;
+
+  case 28:
+#line 102 "cafezinho.y"
+                        { (yyval.Tpont)=(yyvsp[-1].Tpont); }
+#line 1642 "cafezinho.tab.c"
+    break;
+
+  case 29:
+#line 103 "cafezinho.y"
+                                { (yyval.Tpont) = CriaNo(Retorne, lineNum, (yyvsp[-1].Tpont), NULL, NULL); }
+#line 1648 "cafezinho.tab.c"
+    break;
+
+  case 30:
+#line 104 "cafezinho.y"
+                                   { (yyval.Tpont) = CriaNo(Leia, lineNum, (yyvsp[-1].Tpont), NULL, NULL); }
+#line 1654 "cafezinho.tab.c"
+    break;
+
+  case 31:
+#line 105 "cafezinho.y"
+                                { (yyval.Tpont) = CriaNo(Escreva, lineNum, (yyvsp[-1].Tpont), NULL, NULL); }
+#line 1660 "cafezinho.tab.c"
+    break;
+
+  case 32:
+#line 106 "cafezinho.y"
+                                            { (yyval.Tpont) = CriaNo(EscrevaC, lineNum, NULL, NULL, NULL); }
+#line 1666 "cafezinho.tab.c"
+    break;
+
+  case 33:
+#line 107 "cafezinho.y"
+                             { (yyval.Tpont) = CriaNo(NovaLinha, lineNum, NULL, NULL, NULL); }
+#line 1672 "cafezinho.tab.c"
+    break;
+
+  case 34:
+#line 108 "cafezinho.y"
+                                                           {{ (yyval.Tpont) = CriaNo(Se, lineNum, (yyvsp[-3].Tpont), (yyvsp[0].Tpont), NULL); }}
+#line 1678 "cafezinho.tab.c"
+    break;
+
+  case 35:
+#line 109 "cafezinho.y"
+                                                                         { (yyval.Tpont) = CriaNoTernario(SeSenao, lineNum, (yyvsp[-5].Tpont), (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1684 "cafezinho.tab.c"
+    break;
+
+  case 36:
+#line 110 "cafezinho.y"
+                                                                   { (yyval.Tpont) = CriaNo(Enquanto, lineNum, (yyvsp[-3].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1690 "cafezinho.tab.c"
+    break;
+
+  case 37:
+#line 111 "cafezinho.y"
+            { (yyval.Tpont)=(yyvsp[0].Tpont); }
+#line 1696 "cafezinho.tab.c"
+    break;
+
+  case 38:
+#line 115 "cafezinho.y"
+                 { (yyval.Tpont)=(yyvsp[0].Tpont); }
+#line 1702 "cafezinho.tab.c"
+    break;
+
+  case 39:
+#line 119 "cafezinho.y"
+               { (yyval.Tpont)=(yyvsp[0].Tpont); }
+#line 1708 "cafezinho.tab.c"
+    break;
+
+  case 40:
+#line 120 "cafezinho.y"
+                                  { (yyval.Tpont) = CriaNo(Atribuir, lineNum, (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1714 "cafezinho.tab.c"
+    break;
+
+  case 41:
+#line 124 "cafezinho.y"
+             { (yyval.Tpont)=(yyvsp[0].Tpont); }
+#line 1720 "cafezinho.tab.c"
+    break;
+
+  case 42:
+#line 125 "cafezinho.y"
+                                                   { (yyval.Tpont) = CriaNoTernario(SeTernario, lineNum, (yyvsp[-4].Tpont), (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1726 "cafezinho.tab.c"
+    break;
+
+  case 43:
+#line 129 "cafezinho.y"
+                        { (yyval.Tpont) = CriaNo(Ou, lineNum, (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1732 "cafezinho.tab.c"
+    break;
+
+  case 44:
+#line 130 "cafezinho.y"
+              { (yyval.Tpont)=(yyvsp[0].Tpont); }
+#line 1738 "cafezinho.tab.c"
+    break;
+
+  case 45:
+#line 134 "cafezinho.y"
+                       { (yyval.Tpont) = CriaNo(And, lineNum, (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1744 "cafezinho.tab.c"
+    break;
+
+  case 46:
+#line 135 "cafezinho.y"
+             { (yyval.Tpont)=(yyvsp[0].Tpont); }
+#line 1750 "cafezinho.tab.c"
+    break;
+
+  case 47:
+#line 139 "cafezinho.y"
+                              { (yyval.Tpont) = CriaNo(IgualIgual, lineNum, (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1756 "cafezinho.tab.c"
+    break;
+
+  case 48:
+#line 140 "cafezinho.y"
+                                 { (yyval.Tpont) = CriaNo(Diferente, lineNum, (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1762 "cafezinho.tab.c"
+    break;
+
+  case 49:
+#line 141 "cafezinho.y"
+                {   (yyval.Tpont)=(yyvsp[0].Tpont); }
+#line 1768 "cafezinho.tab.c"
+    break;
+
+  case 50:
+#line 145 "cafezinho.y"
+                              { (yyval.Tpont) = CriaNo(Menor, lineNum, (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1774 "cafezinho.tab.c"
+    break;
+
+  case 51:
+#line 146 "cafezinho.y"
+                              { (yyval.Tpont) = CriaNo(Maior, lineNum, (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1780 "cafezinho.tab.c"
+    break;
+
+  case 52:
+#line 147 "cafezinho.y"
+                                   { (yyval.Tpont) = CriaNo(MaiorIgual, lineNum, (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1786 "cafezinho.tab.c"
+    break;
+
+  case 53:
+#line 148 "cafezinho.y"
+                                   { (yyval.Tpont) = CriaNo(MenorIgual, lineNum, (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1792 "cafezinho.tab.c"
+    break;
+
+  case 54:
+#line 149 "cafezinho.y"
+              { (yyval.Tpont)=(yyvsp[0].Tpont); }
+#line 1798 "cafezinho.tab.c"
+    break;
+
+  case 55:
+#line 152 "cafezinho.y"
+                           { (yyval.Tpont) = CriaNo(Mais, lineNum, (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1804 "cafezinho.tab.c"
+    break;
+
+  case 56:
+#line 153 "cafezinho.y"
+                            { (yyval.Tpont) = CriaNo(Menos, lineNum, (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1810 "cafezinho.tab.c"
+    break;
+
+  case 57:
+#line 154 "cafezinho.y"
+              { (yyval.Tpont)=(yyvsp[0].Tpont); }
+#line 1816 "cafezinho.tab.c"
+    break;
+
+  case 58:
+#line 158 "cafezinho.y"
+                           { (yyval.Tpont) = CriaNo(Mult, lineNum, (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1822 "cafezinho.tab.c"
+    break;
+
+  case 59:
+#line 159 "cafezinho.y"
+                              { (yyval.Tpont) = CriaNo(Divisao, lineNum, (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1828 "cafezinho.tab.c"
+    break;
+
+  case 60:
+#line 160 "cafezinho.y"
+                           { (yyval.Tpont) = CriaNo(Resto, lineNum, (yyvsp[-2].Tpont), (yyvsp[0].Tpont), NULL); }
+#line 1834 "cafezinho.tab.c"
+    break;
+
+  case 61:
+#line 161 "cafezinho.y"
+             { (yyval.Tpont)=(yyvsp[0].Tpont); }
+#line 1840 "cafezinho.tab.c"
+    break;
+
+  case 62:
+#line 165 "cafezinho.y"
+                     { (yyval.Tpont) = CriaNo(Oposto, lineNum, (yyvsp[0].Tpont), NULL, NULL); }
+#line 1846 "cafezinho.tab.c"
+    break;
+
+  case 63:
+#line 166 "cafezinho.y"
+                          { (yyval.Tpont) = CriaNo(Negacao, lineNum, (yyvsp[0].Tpont), NULL, NULL); }
+#line 1852 "cafezinho.tab.c"
+    break;
+
+  case 64:
+#line 167 "cafezinho.y"
+               { (yyval.Tpont)=(yyvsp[0].Tpont); }
+#line 1858 "cafezinho.tab.c"
+    break;
+
+  case 65:
+#line 171 "cafezinho.y"
+                                           { (yyval.Tpont) = CriaNo(IdentificadorCEC, lineNum, (yyvsp[-1].Tpont), NULL, NULL); }
+#line 1864 "cafezinho.tab.c"
+    break;
+
+  case 66:
+#line 172 "cafezinho.y"
+         { (yyval.Tpont) = CriaNo(Identificador, lineNum, NULL, NULL, NULL); }
+#line 1870 "cafezinho.tab.c"
+    break;
+
+  case 67:
+#line 176 "cafezinho.y"
+                                                 { (yyval.Tpont) = CriaNo(IdentificadorL, lineNum, (yyvsp[-1].Tpont), NULL, NULL); }
+#line 1876 "cafezinho.tab.c"
+    break;
+
+  case 68:
+#line 177 "cafezinho.y"
+                                        { (yyval.Tpont) = CriaNo(Identificador, lineNum, NULL, NULL, NULL); }
+#line 1882 "cafezinho.tab.c"
+    break;
+
+  case 69:
+#line 178 "cafezinho.y"
+                                           { (yyval.Tpont) = CriaNo(IdentificadorCEC, lineNum, (yyvsp[-1].Tpont), NULL, NULL); }
+#line 1888 "cafezinho.tab.c"
+    break;
+
+  case 70:
+#line 179 "cafezinho.y"
+         { (yyval.Tpont) = CriaNo(Identificador, lineNum, NULL, NULL, yytext); }
+#line 1894 "cafezinho.tab.c"
+    break;
+
+  case 71:
+#line 180 "cafezinho.y"
+               { (yyval.Tpont) = CriaNo(ConstCar, lineNum, NULL, NULL, yytext); }
+#line 1900 "cafezinho.tab.c"
+    break;
+
+  case 72:
+#line 181 "cafezinho.y"
+               { (yyval.Tpont) = CriaNo(ConstInt, lineNum, NULL, NULL, yytext); }
+#line 1906 "cafezinho.tab.c"
+    break;
+
+  case 73:
+#line 182 "cafezinho.y"
+                                          { (yyval.Tpont)=(yyvsp[-1].Tpont); }
+#line 1912 "cafezinho.tab.c"
+    break;
+
+  case 74:
+#line 186 "cafezinho.y"
+                 { (yyval.Tpont)=(yyvsp[0].Tpont); }
+#line 1918 "cafezinho.tab.c"
+    break;
+
+  case 75:
+#line 187 "cafezinho.y"
+                                  { (yyval.Tpont) = CriaNo(Virgula, lineNum, (yyvsp[-2].Tpont), (yyvsp[0].Tpont), yytext); }
+#line 1924 "cafezinho.tab.c"
+    break;
+
+
+#line 1928 "cafezinho.tab.c"
 
       default: break;
     }
@@ -1701,8 +2156,20 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 177 "cafezinho.y"
+#line 190 "cafezinho.y"
 
+
+int main(int argc, char** argv){
+   if(argc!=2)
+        yyerror("Uso correto: ./cafezinho nome_arq_entrada.txt");
+   yyin=fopen(argv[1], "r");
+   if(!yyin)
+        yyerror("arquivo não pode ser aberto\n");
+    if (yyparse() == 0) {
+        printf("Análise sintática concluída com sucesso.\n");
+    }
+
+}
 
 void yyerror(char const * s) {
         if(tipoErro==0)
@@ -1719,14 +2186,199 @@ void yyerror(char const * s) {
 
 }
 
-int main(int argc, char** argv){
-   if(argc!=2)
-        yyerror("Uso correto: ./cafezinho nome_arq_entrada.txt");
-   yyin=fopen(argv[1], "r");
-   if(!yyin)
-        yyerror("arquivo não pode ser aberto\n");
-    if (yyparse() == 0) {
-        printf("Análise sintática concluída com sucesso.\n");
+void walkTree(TOperador* raiz){
+    if(raiz){
+        printOperator(raiz, nomeOperador);
+        printf("%s", nomeOperador);
+            printf("filho 1\n");
+        walkTree(raiz->t1);
+            printf("end filho 1 \nfilho 2\n");
+        walkTree(raiz->t2);
+            printf("end filho 2\n");
+        walkTree(raiz->t3);
+        }
+}
+TOperador* CriaNo(TypeOperators typeOperator, int line, TOperador* t1, TOperador* t2, char* Tlexema){
+    
+    TOperador* aux = (TOperador*) malloc(sizeof(TOperador));
+    if (aux){
+        //printf("entrei aqui\n");
+        aux->typeOperator=typeOperator;
+        aux->line=line;
+        aux->t1=t1;
+        aux->t2=t2;
+        aux->t3=NULL;
+        if(Tlexema){
+            aux->Tlexema= (char*)malloc(strlen(Tlexema)+1);
+            strcpy(aux->Tlexema, Tlexema);
+        }
+        return(aux);
     }
-
+    return(NULL);
+}
+TOperador* CriaNoTernario(TypeOperators typeOperator, int line, TOperador* t1, TOperador* t2,TOperador* t3, char* Tlexema){
+    
+    TOperador* aux = (TOperador*) malloc(sizeof(TOperador));
+    if (aux){
+        //printf("entrei aqui\n");
+        aux->typeOperator=typeOperator;
+        aux->line=line;
+        aux->t1=t1;
+        aux->t2=t2;
+        aux->t3=t3;
+        if(Tlexema){
+            aux->Tlexema= (char*)malloc(strlen(Tlexema)+1);
+            strcpy(aux->Tlexema, Tlexema);
+        }
+        return(aux);
+    }
+    return(NULL);
+}
+void printOperator(TOperador* no, char* nomeOperador){
+    switch(no->typeOperator){
+        case Programa:
+        strcpy(nomeOperador,"programa\n");
+        break;
+        case Se:
+        sprintf(nomeOperador, "Se - LINHA: %d\n", no->line);
+        break;
+        case Enquanto :
+        sprintf(nomeOperador, "Enquanto - LINHA: %d\n", no->line);
+        break;
+        case Do:
+        sprintf(nomeOperador, "Do - LINHA: %d\n", no->line);
+        break;
+        case ConstCar:
+        sprintf(nomeOperador, "%s ConstCar- LINHA: %d\n", no->Tlexema,no->line);
+        break;
+        case ConstInt:
+        sprintf(nomeOperador, "%s ConstInt- LINHA: %d\n", no->Tlexema,no->line);
+        break;
+        case Num:
+        sprintf(nomeOperador, "%s NUM- LINHA: %d\n", no->Tlexema,no->line);
+        break;
+        case Mais:
+        sprintf(nomeOperador, "+ - LINHA: %d\n", no->line);
+        break;
+        case Menos:
+        sprintf(nomeOperador, "- - LINHA: %d\n", no->line);
+        break;
+        case Mult:
+        sprintf(nomeOperador, "* - LINHA: %d\n", no->line);
+        break;
+        case Divisao:
+        sprintf(nomeOperador, "/ - LINHA: %d\n", no->line);
+        break;
+        case Resto:
+        sprintf(nomeOperador, "%% - LINHA: %d\n", no->line);
+        break;
+        case Menor:
+        sprintf(nomeOperador, "< - LINHA: %d\n", no->line);
+        break;
+        case Maior:
+        sprintf(nomeOperador, "> - LINHA: %d\n", no->line);
+        break;
+        case Igual:
+        sprintf(nomeOperador, "== - LINHA: %d\n", no->line);
+        break;
+        case MenorIgual:
+        sprintf(nomeOperador, "<= - LINHA: %d\n", no->line);
+        break;
+        case MaiorIgual:
+        sprintf(nomeOperador, ">= - LINHA: %d\n", no->line);
+        break;
+        case Identificador:
+        sprintf(nomeOperador, "ID - LINHA: %d\n", no->line);
+        break;
+        case Atribuir:
+        sprintf(nomeOperador, "= - LINHA: %d\n", no->line);
+        break;
+        case DeclFuncVar:
+        sprintf(nomeOperador, "DeclFuncVar - LINHA: %d\n", no->line);
+        break;
+        case Escreva:
+        sprintf(nomeOperador, "Escreva Expr - LINHA: %d\n", no->line);
+        break;
+        case EscrevaC:
+        sprintf(nomeOperador, "Escreva Cadeia - LINHA: %d\n", no->line);
+        break;
+        case Bloco:
+        sprintf(nomeOperador, "Bloco - LINHA: %d\n", no->line);
+        break;
+        case ListaComando:
+        sprintf(nomeOperador, "ListaComando - LINHA: %d\n", no->line);
+        break;
+        case lstStmt:
+        sprintf(nomeOperador, "Faze de Teste - LINHA: %d\n", no->line);
+        break;
+        case IdentificadorCEC:
+        sprintf(nomeOperador, "ID[Expr] - LINHA: %d\n", no->line);
+        break;
+        case IdentificadorL:
+        sprintf(nomeOperador, "ID(ListExpr) - LINHA: %d\n", no->line);
+        break;
+        case Negacao:
+        sprintf(nomeOperador, "! - LINHA: %d\n", no->line);
+        break;
+        case Oposto:
+        sprintf(nomeOperador, "- Unario - LINHA: %d\n", no->line);
+        break;
+        case IgualIgual:
+        sprintf(nomeOperador, "== - LINHA: %d\n", no->line);
+        break;
+        case Diferente:
+        sprintf(nomeOperador, "!= - LINHA: %d\n", no->line);
+        break;
+        case And:
+        sprintf(nomeOperador, "E - LINHA: %d\n", no->line);
+        break;
+        case Ou:
+        sprintf(nomeOperador, "Ou - LINHA: %d\n", no->line);
+        break;
+        case SeTernario:
+        sprintf(nomeOperador, "E ? E : E - LINHA: %d\n", no->line);
+        break;
+        case SeSenao:
+        sprintf(nomeOperador, "SeSenao - LINHA: %d\n", no->line);
+        break;
+        case NovaLinha:
+        sprintf(nomeOperador, "NovaLinha  - LINHA: %d\n", no->line);
+        break;
+        case Leia:
+        sprintf(nomeOperador, "Leia  - LINHA: %d\n", no->line);
+        break;
+        case Retorne:
+        sprintf(nomeOperador, "Retorne  - LINHA: %d\n", no->line);
+        break;
+        case Tipo:
+        sprintf(nomeOperador, "Tipo %s  - LINHA: %d\n",no->Tlexema, no->line);
+        break;
+        case VetorDeclVar:
+        sprintf(nomeOperador, "VetorDeclVar - LINHA: %d\n",no->line);
+        break;
+        case ListaDeclVar:
+        sprintf(nomeOperador, "ListaDeclVar - LINHA: %d\n",no->line);
+        break;
+        case ListaParametrosCont2:
+        sprintf(nomeOperador, "Tipo ID VIRGULA  ListaParametrosCont - LINHA: %d\n",no->line);
+        break;
+        case ListaParametrosCont3:
+        sprintf(nomeOperador, "Tipo ID COLCH_E  COLCH_D VIRGULA ListaParametrosCont - LINHA: %d\n",no->line);
+        break;
+        case DeclFunc:
+        sprintf(nomeOperador, "DeclFunc - LINHA: %d\n",no->line);
+        break;
+        case DeclFuncVar1:
+        sprintf(nomeOperador, "DeclFuncVar1 - LINHA: %d\n",no->line);
+        break;
+        case DeclFuncVar2:
+        sprintf(nomeOperador, "DeclFuncVar2 - LINHA: %d\n",no->line);
+        break;
+        case DeclFuncVar3:
+        sprintf(nomeOperador, "DeclFuncVar3 - LINHA: %d\n",no->line);
+        break;
+        case Virgula:
+        sprintf(nomeOperador, ", - LINHA: %d\n",no->line);
+        break;
+    }
 }

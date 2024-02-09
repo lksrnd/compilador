@@ -86,10 +86,10 @@ extern int yydebug;
     EXECUTE = 292,
     E = 293,
     OU = 294,
-    CONSTINT = 295,
+    ID = 295,
     CONSTCAR = 296,
-    CADEIACARACTERES = 297,
-    ID = 298
+    CONSTINT = 297,
+    CADEIACARACTERES = 298
   };
 #endif
 
@@ -97,11 +97,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 14 "cafezinho.y"
+#line 24 "cafezinho.y"
 
-    int intValue;
-    char charValue;
-    char* cadeiaValue;
+    int line;
+    char* Tlexema;
+    TOperador* Tpont;
 
 #line 107 "cafezinho.tab.h"
 
